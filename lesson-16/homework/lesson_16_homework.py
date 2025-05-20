@@ -1,98 +1,63 @@
-# 1. Task: SQL Server Database Creation and Population
-import pyodbc
+import numpy as np
 
-# Replace with your SQL Server connection details
-conn_str = (
-    "DRIVER={SQL Server};"
-    "SERVER=your_server_name;"  # e.g., localhost or your server name
-    "DATABASE=your_database_name;"  # e.g., SchoolDB
-    "Trusted_Connection=yes;"  # Use Windows Authentication, or provide UID and PWD
-    # "UID=your_username;PWD=your_password;"  # Uncomment if using SQL Server Authentication
-)
+# 1. Convert List to 1D Array
+lst = [12.23, 13.32, 100, 36.32]
+arr1 = np.array(lst)
+print("1. Convert List to 1D Array:", arr1)
 
-conn = pyodbc.connect(conn_str)
-cursor = conn.cursor()
+# 2. Create 3x3 Matrix (2 to 10)
+arr2 = np.arange(2, 11).reshape(3, 3)
+print("\n2. 3x3 Matrix (2 to 10):\n", arr2)
 
-# Create table if it doesn't exist
-cursor.execute('''
-    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='students' AND xtype='U')
-    CREATE TABLE students (
-        id INT PRIMARY KEY,
-        name VARCHAR(50),
-        age INT,
-        grade INT
-    )
-''')
+# 3. Null Vector (10) & Update Sixth Value
+arr3 = np.zeros(10)
+arr3[5] = 11
+print("\n3. Null Vector with Sixth Value Updated:", arr3)
 
-# Populate table with data
-students_data = [(1, "Alice", 20, 85), (2, "Bob", 21, 90), (3, "Charlie", 19, 78)]
-for student in students_data:
-    cursor.execute("IF NOT EXISTS (SELECT 1 FROM students WHERE id = ?) "
-                   "INSERT INTO students (id, name, age, grade) VALUES (?, ?, ?, ?)",
-                   (student[0], *student))
-conn.commit()
-conn.close()
+# 4. Array from 12 to 38
+arr4 = np.arange(12, 38)
+print("\n4. Array from 12 to 38:", arr4)
 
-# 2. Task: Querying the Database
-import pyodbc
+# 5. Convert Array to Float Type
+arr5 = np.array([1, 2, 3, 4])
+arr5_float = arr5.astype(float)
+print("\n5. Convert Array to Float:", arr5_float)
 
-conn = pyodbc.connect(conn_str)
-cursor = conn.cursor()
-cursor.execute("SELECT * FROM students WHERE grade > 80")
-results = cursor.fetchall()
-for row in results:
-    print(row)
-conn.close()
+# 6. Celsius to Fahrenheit Conversion
+celsius = np.array([0, 12, 45.21, 34, 99.91])
+fahrenheit = (celsius * 9/5) + 32
+print("\n6. Celsius to Fahrenheit:")
+print("Celsius:", celsius)
+print("Fahrenheit:", fahrenheit)
+# Reverse conversion for verification
+celsius_back = (fahrenheit - 32) * 5/9
+print("Back to Celsius:", celsius_back)
 
-# 3. Task: Updating and Deleting Records
-import pyodbc
+# 7. Append Values to Array
+arr7 = np.array([10, 20, 30])
+arr7 = np.append(arr7, [40, 50, 60, 70, 80, 90])
+print("\n7. Append Values to Array:", arr7)
 
-conn = pyodbc.connect(conn_str)
-cursor = conn.cursor()
-cursor.execute("UPDATE students SET grade = 95 WHERE name = 'Alice'")
-cursor.execute("DELETE FROM students WHERE name = 'Charlie'")
-conn.commit()
-conn.close()
+# 8. Array Statistical Functions
+arr8 = np.random.rand(10)
+mean = np.mean(arr8)
+median = np.median(arr8)
+std_dev = np.std(arr8)
+print("\n8. Array Statistics:")
+print("Array:", arr8)
+print("Mean:", mean)
+print("Median:", median)
+print("Standard Deviation:", std_dev)
 
-# 4. Task: Employee Management System
-import pyodbc
+# 9. Find Min and Max
+arr9 = np.random.rand(10)
+min_val = np.min(arr9)
+max_val = np.max(arr9)
+print("\n9. Find Min and Max:")
+print("Array:", arr9)
+print("Min:", min_val)
+print("Max:", max_val)
 
-conn = pyodbc.connect(conn_str)
-cursor = conn.cursor()
-
-# Create employees table if it doesn't exist
-cursor.execute('''
-    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='employees' AND xtype='U')
-    CREATE TABLE employees (
-        id INT PRIMARY KEY,
-        name VARCHAR(50),
-        department VARCHAR(50),
-        salary INT
-    )
-''')
-
-def add_employee(id, name, department, salary):
-    cursor.execute("INSERT INTO employees (id, name, department, salary) VALUES (?, ?, ?, ?)",
-                   (id, name, department, salary))
-    conn.commit()
-
-def view_employees():
-    cursor.execute("SELECT * FROM employees")
-    return cursor.fetchall()
-
-def update_salary(id, new_salary):
-    cursor.execute("UPDATE employees SET salary = ? WHERE id = ?", (new_salary, id))
-    conn.commit()
-
-def delete_employee(id):
-    cursor.execute("DELETE FROM employees WHERE id = ?", (id,))
-    conn.commit()
-
-# Test the Employee Management System
-add_employee(1, "John", "HR", 50000)
-add_employee(2, "Jane", "IT", 60000)
-print(view_employees())
-update_salary(1, 55000)
-delete_employee(2)
-print(view_employees())
-conn.close()
+# 10. Create 3x3x3 Array with Random Values
+arr10 = np.random.rand(3, 3, 3)
+print("\n10. 3x3x3 Array with Random Values:\n", arr10)
